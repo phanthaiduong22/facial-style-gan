@@ -105,11 +105,11 @@ class Solver(nn.Module):
             masks = nets.fan.get_heatmap(x_real) if args.w_hpf > 0 else None
 
             # train the discriminator
-            d_loss, d_losses_latent = compute_d_loss(
-                nets, args, x_real, y_org, y_trg, z_trg=z_trg, masks=masks)
-            self._reset_grad()
-            d_loss.backward()
-            optims.discriminator.step()
+            # d_loss, d_losses_latent = compute_d_loss(
+            #     nets, args, x_real, y_org, y_trg, z_trg=z_trg, masks=masks)
+            # self._reset_grad()
+            # d_loss.backward()
+            # optims.discriminator.step()
 
             d_loss, d_losses_ref = compute_d_loss(
                 nets, args, x_real, y_org, y_trg, x_ref=x_ref, masks=masks)
@@ -118,19 +118,21 @@ class Solver(nn.Module):
             optims.discriminator.step()
 
             # train the generator
-            g_loss, g_losses_latent = compute_g_loss(
-                nets, args, x_real, y_org, y_trg, z_trgs=[z_trg, z_trg2], masks=masks)
-            self._reset_grad()
-            g_loss.backward()
-            optims.generator.step()
+            # g_loss, g_losses_latent = compute_g_loss(
+            #     nets, args, x_real, y_org, y_trg, z_trgs=[z_trg, z_trg2], masks=masks)
+            # self._reset_grad()
+            # g_loss.backward()
+            # optims.generator.step()
             # optims.mapping_network.step()
-            optims.style_encoder.step()
+           
 
             g_loss, g_losses_ref = compute_g_loss(
                 nets, args, x_real, y_org, y_trg, x_refs=[x_ref, x_ref2], masks=masks)
             self._reset_grad()
             g_loss.backward()
             optims.generator.step()
+            optims.style_encoder.step()
+
 
             # compute moving average of network parameters
             moving_average(nets.generator, nets_ema.generator, beta=0.999)

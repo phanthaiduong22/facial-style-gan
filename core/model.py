@@ -1,7 +1,6 @@
 """
 StarGAN v2
 Copyright (c) 2020-present NAVER Corp.
-
 This work is licensed under the Creative Commons Attribution-NonCommercial
 4.0 International License. To view a copy of this license, visit
 http://creativecommons.org/licenses/by-nc/4.0/ or send a letter to
@@ -18,7 +17,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 from core.wing import FAN
-
 
 class SeparableConv2d(nn.Module):
     def __init__(self,in_channels, out_channels, kernel_size, stride=1, padding=0, dilation=1, groups=1, bias=True, padding_mode='zeros'):
@@ -165,8 +163,6 @@ class Generator(nn.Module):
             nn.InstanceNorm2d(dim_in, affine=True),
             nn.LeakyReLU(0.2),
             nn.Conv2d(dim_in, 3, 1, 1, 0))
-
-        self.kernel_dilation = torch.ones(5, 5).cuda()
 
         # down/up-sampling blocks
         repeat_num = int(np.log2(img_size)) - 4
@@ -356,17 +352,17 @@ def build_model(args):
 
     return nets, nets_ema
 
-def build_teacher_model(args):
-    generator = Generator(args.img_size, args.style_dim, w_hpf=args.w_hpf).eval()
-    # mapping_network = MappingNetwork(args.latent_dim, args.style_dim, args.num_domains).eval()
-    style_encoder = StyleEncoder(args.img_size, args.style_dim, args.num_domains).eval()
+# def build_teacher_model(args):
+#     generator = Generator(args.img_size, args.style_dim, w_hpf=args.w_hpf).eval()
+#     mapping_network = MappingNetwork(args.latent_dim, args.style_dim, args.num_domains).eval()
+#     style_encoder = StyleEncoder(args.img_size, args.style_dim, args.num_domains).eval()
 
-    nets = Munch(generator=generator,
-                #  mapping_network=mapping_network,
-                 style_encoder=style_encoder)
+#     nets = Munch(generator=generator,
+#                  mapping_network=mapping_network,
+#                  style_encoder=style_encoder)
 
-    if args.w_hpf > 0:
-        fan = FAN(fname_pretrained=args.wing_path).eval()
-        nets.fan = fan
+#     if args.w_hpf > 0:
+#         fan = FAN(fname_pretrained=args.wing_path).eval()
+#         nets.fan = fan
 
-    return nets
+#     return nets

@@ -3,22 +3,20 @@ Please follow the instructions to install the required libraries in a new conda 
 For obtaining MACs and Size, follow the commands below:
 
 StarGAN-v2 celeba_hq
-```bash
-python main.py --mode profile --num_domains 2 --w_hpf 1 
-```
 
-StarGAN-v2 afhq
 ```bash
-python main.py --mode profile --num_domains 3 --w_hpf 0 
+python main.py --mode profile --num_domains 2 --w_hpf 1
 ```
 
 TinyStarGAN-v2 celeba_hq
+
 ```bash
 python main.py --mode profile --num_domains 2 --w_hpf 1 \
-               --alpha 128 --efficient 1 
+               --alpha 128 --efficient 1
 ```
 
 TinyStarGAN-v2 afhq
+
 ```bash
 python main.py --mode profile --num_domains 3 --w_hpf 0 \
                --alpha 128 --efficient 1
