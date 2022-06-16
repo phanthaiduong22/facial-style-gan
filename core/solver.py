@@ -23,12 +23,41 @@ from core.data_loader import InputFetcher
 import core.utils as utils
 from metrics.eval import calculate_metrics
 
+threadList = ["Thread-1", "Thread-2", "Thread-3"]
+nameList = ["One", "Two", "Three", "Four", "Five"]
+
+class myThread (threading.Thread):
+    def __init__(self, threadID, name, q):
+		threading.Thread.__init__(self)
+		self.threadID = threadID
+		self.name = name
+		self.q = q
+    def run(self, solver):
+		print "Starting " + self.name
+        process_data(self.name, self.q)
+        print "Exiting " + self.name
+
+    def process_data(threadName, q):
+        while not exitFlag:
+            if not workQueue.empty():
+                data = q.get()
+                print "%s processing %s" % (threadName, data)
+            else:
+                time.sleep(1)
 
 class Solver(nn.Module):
     def __init__(self, args):
         super().__init__()
         self.args = args
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        self.threads = []
+        self.workQueue = Queue.Queue(10)
+        # Handling threads
+        for tName in threadList:
+            thread = myThread(threadID, tName, workQueue)
+            thread.start()
+            self.threads.append(thread)
+            threadID += 1
 
         self.nets, self.nets_ema = build_model(args)
         # below setattrs are to make networks be children of Solver, e.g., for self.to(self.device)
@@ -76,101 +105,107 @@ class Solver(nn.Module):
             optim.zero_grad()
 
     def train(self, loaders):
-        args = self.args
-        nets = self.nets
-        nets_ema = self.nets_ema
-        optims = self.optims
+        for word in nameList:
+            self.workQueue.put(word)
+        # args = self.args
+        # nets = self.nets
+        # nets_ema = self.nets_ema
+        # optims = self.optims
 
-        # fetch random validation images for debugging
-        fetcher = InputFetcher(loaders.src, loaders.ref, args.latent_dim, 'train')
-        fetcher_val = InputFetcher(loaders.val, None, args.latent_dim, 'val')
-        inputs_val = next(fetcher_val)
+        # # fetch random validation images for debugging
+        # fetcher = InputFetcher(loaders.src, loaders.ref, args.latent_dim, 'train')
+        # fetcher_val = InputFetcher(loaders.val, None, args.latent_dim, 'val')
+        # inputs_val = next(fetcher_val)
 
-        # resume training if necessary
-        if args.resume_iter > 0:
-            self._load_checkpoint(args.resume_iter)
+        # # resume training if necessary
+        # if args.resume_iter > 0:
+        #     self._load_checkpoint(args.resume_iter)
 
-        # remember the initial value of ds weight
-        initial_lambda_ds = args.lambda_ds
+        # # remember the initial value of ds weight
+        # initial_lambda_ds = args.lambda_ds
 
-        print('Start training...')
-        start_time = time.time()
-        for i in range(args.resume_iter, args.total_iters):
-            # fetch images and labels
-            inputs = next(fetcher)
-            x_real, y_org = inputs.x_src, inputs.y_src
-            x_ref, x_ref2, y_trg = inputs.x_ref, inputs.x_ref2, inputs.y_ref
-            z_trg, z_trg2 = inputs.z_trg, inputs.z_trg2
+        # print('Start training...')
+        # start_time = time.time()
+        # for i in range(args.resume_iter, args.total_iters):
+        #     handle_training(nets, nets_ema, optims, fetcher, inputs_val, initial_lambda_ds, start_time)
+    
+    
+    def handle_training(nets, nets_ema, optims, fetcher, inputs_val, initial_lambda_ds, start_time):
+        # fetch images and labels
+        inputs = next(fetcher)
+        x_real, y_org = inputs.x_src, inputs.y_src
+        x_ref, x_ref2, y_trg = inputs.x_ref, inputs.x_ref2, inputs.y_ref
+        z_trg, z_trg2 = inputs.z_trg, inputs.z_trg2
 
-            masks = nets.fan.get_heatmap(x_real) if args.w_hpf > 0 else None
+        masks = nets.fan.get_heatmap(x_real) if args.w_hpf > 0 else None
 
-            # train the discriminator
-            # d_loss, d_losses_latent = compute_d_loss(
-            #     nets, args, x_real, y_org, y_trg, z_trg=z_trg, masks=masks)
-            # self._reset_grad()
-            # d_loss.backward()
-            # optims.discriminator.step()
+        # train the discriminator
+        # d_loss, d_losses_latent = compute_d_loss(
+        #     nets, args, x_real, y_org, y_trg, z_trg=z_trg, masks=masks)
+        # self._reset_grad()
+        # d_loss.backward()
+        # optims.discriminator.step()
 
-            d_loss, d_losses_ref = compute_d_loss(
-                nets, args, x_real, y_org, y_trg, x_ref=x_ref, masks=masks)
-            self._reset_grad()
-            d_loss.backward()
-            optims.discriminator.step()
+        d_loss, d_losses_ref = compute_d_loss(
+            nets, args, x_real, y_org, y_trg, x_ref=x_ref, masks=masks)
+        self._reset_grad()
+        d_loss.backward()
+        optims.discriminator.step()
 
-            # train the generator
-            # g_loss, g_losses_latent = compute_g_loss(
-            #     nets, args, x_real, y_org, y_trg, z_trgs=[z_trg, z_trg2], masks=masks)
-            # self._reset_grad()
-            # g_loss.backward()
-            # optims.generator.step()
-            # # optims.mapping_network.step()
-            # optims.style_encoder.step()
-           
+        # train the generator
+        # g_loss, g_losses_latent = compute_g_loss(
+        #     nets, args, x_real, y_org, y_trg, z_trgs=[z_trg, z_trg2], masks=masks)
+        # self._reset_grad()
+        # g_loss.backward()
+        # optims.generator.step()
+        # # optims.mapping_network.step()
+        # optims.style_encoder.step()
+        
 
-            g_loss, g_losses_ref = compute_g_loss(
-                nets, args, x_real, y_org, y_trg, x_refs=[x_ref, x_ref2], masks=masks)
-            self._reset_grad()
-            g_loss.backward()
-            optims.generator.step()
+        g_loss, g_losses_ref = compute_g_loss(
+            nets, args, x_real, y_org, y_trg, x_refs=[x_ref, x_ref2], masks=masks)
+        self._reset_grad()
+        g_loss.backward()
+        optims.generator.step()
 
 
-            # compute moving average of network parameters
-            moving_average(nets.generator, nets_ema.generator, beta=0.999)
-            # moving_average(nets.mapping_network, nets_ema.mapping_network, beta=0.999)
-            moving_average(nets.style_encoder, nets_ema.style_encoder, beta=0.999)
+        # compute moving average of network parameters
+        moving_average(nets.generator, nets_ema.generator, beta=0.999)
+        # moving_average(nets.mapping_network, nets_ema.mapping_network, beta=0.999)
+        moving_average(nets.style_encoder, nets_ema.style_encoder, beta=0.999)
 
-            # decay weight for diversity sensitive loss
-            if args.lambda_ds > 0:
-                args.lambda_ds -= (initial_lambda_ds / args.ds_iter)
+        # decay weight for diversity sensitive loss
+        if args.lambda_ds > 0:
+            args.lambda_ds -= (initial_lambda_ds / args.ds_iter)
 
-            # print out log info
-            if (i+1) % args.print_every == 0:
-                elapsed = time.time() - start_time
-                elapsed = str(datetime.timedelta(seconds=elapsed))[:-7]
-                log = "Elapsed time [%s], Iteration [%i/%i], " % (elapsed, i+1, args.total_iters)
-                all_losses = dict()
-                # for loss, prefix in zip([d_losses_latent, d_losses_ref, g_losses_latent, g_losses_ref],
-                                        # ['D/latent_', 'D/ref_', 'G/latent_', 'G/ref_']):
-                for loss, prefix in zip([ d_losses_ref, g_losses_ref],[ 'D/ref_', 'G/ref_']):                     
-                    for key, value in loss.items():
-                        all_losses[prefix + key] = value
-                all_losses['G/lambda_ds'] = args.lambda_ds
-                log += ' '.join(['%s: [%.4f]' % (key, value) for key, value in all_losses.items()])
-                print(log)
+        # print out log info
+        if (i+1) % args.print_every == 0:
+            elapsed = time.time() - start_time
+            elapsed = str(datetime.timedelta(seconds=elapsed))[:-7]
+            log = "Elapsed time [%s], Iteration [%i/%i], " % (elapsed, i+1, args.total_iters)
+            all_losses = dict()
+            # for loss, prefix in zip([d_losses_latent, d_losses_ref, g_losses_latent, g_losses_ref],
+                                    # ['D/latent_', 'D/ref_', 'G/latent_', 'G/ref_']):
+            for loss, prefix in zip([ d_losses_ref, g_losses_ref],[ 'D/ref_', 'G/ref_']):                     
+                for key, value in loss.items():
+                    all_losses[prefix + key] = value
+            all_losses['G/lambda_ds'] = args.lambda_ds
+            log += ' '.join(['%s: [%.4f]' % (key, value) for key, value in all_losses.items()])
+            print(log)
 
-            # generate images for debugging
-            if (i+1) % args.sample_every == 0:
-                os.makedirs(args.sample_dir, exist_ok=True)
-                utils.debug_image(nets_ema, args, inputs=inputs_val, step=i+1)
+        # generate images for debugging
+        if (i+1) % args.sample_every == 0:
+            os.makedirs(args.sample_dir, exist_ok=True)
+            utils.debug_image(nets_ema, args, inputs=inputs_val, step=i+1)
 
-            # save model checkpoints
-            if (i+1) % args.save_every == 0:
-                self._save_checkpoint(step=i+1)
+        # save model checkpoints
+        if (i+1) % args.save_every == 0:
+            self._save_checkpoint(step=i+1)
 
-            # compute FID and LPIPS if necessary
-            if (i+1) % args.eval_every == 0:
-                # calculate_metrics(nets_ema, args, i+1, mode='latent')
-                calculate_metrics(nets_ema, args, i+1, mode='reference')
+        # compute FID and LPIPS if necessary
+        if (i+1) % args.eval_every == 0:
+            # calculate_metrics(nets_ema, args, i+1, mode='latent')
+            calculate_metrics(nets_ema, args, i+1, mode='reference')
 
     @torch.no_grad()
     def sample(self, loaders):
@@ -200,6 +235,8 @@ class Solver(nn.Module):
             fname = ospj(args.result_dir, 'video_ref.mp4')
             print('Working on {}...'.format(fname))
             utils.video_ref(nets_ema, args, src.x, ref.x, ref.y, fname)    
+
+
         
     @torch.no_grad()
     def evaluate(self):
@@ -209,6 +246,7 @@ class Solver(nn.Module):
         self._load_checkpoint(args.resume_iter)
         # calculate_metrics(nets_ema, args, step=resume_iter, mode='latent')
         calculate_metrics(nets_ema, args, step=resume_iter, mode='reference')
+
 
 
 def compute_d_loss(nets, args, x_real, y_org, y_trg, z_trg=None, x_ref=None, masks=None):
