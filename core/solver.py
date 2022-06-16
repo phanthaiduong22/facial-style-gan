@@ -123,7 +123,8 @@ class Solver(nn.Module):
             # self._reset_grad()
             # g_loss.backward()
             # optims.generator.step()
-            # optims.mapping_network.step()
+            # # optims.mapping_network.step()
+            # optims.style_encoder.step()
            
 
             g_loss, g_losses_ref = compute_g_loss(
@@ -131,7 +132,6 @@ class Solver(nn.Module):
             self._reset_grad()
             g_loss.backward()
             optims.generator.step()
-            optims.style_encoder.step()
 
 
             # compute moving average of network parameters
