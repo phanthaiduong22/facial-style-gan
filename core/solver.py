@@ -26,8 +26,10 @@ from metrics.eval import calculate_metrics
 import queue
 import threading
 
-threadList = ["Thread-1", "Thread-2", "Thread-3"]
+threadList = ["Thread-1","Thread-2", "Thread-3"]
+# threadList = ["Thread-1"]
 nameList = ["One", "Two", "Three", "Four", "Five"]
+
 
 class myThread (threading.Thread):
     def __init__(self, threadID, name, q, solver):
@@ -38,9 +40,15 @@ class myThread (threading.Thread):
         self.solver = solver
     def run(self):
         print("Starting " + self.name)
-        print(self.name, self.q.get())
-        # process_data(self.name, self.q)
-        # solver.handle_training()
+       
+        while(1):
+            if not self.q.empty():
+                i = self.q.get()
+                print(self.name + " is handling " + str(i))
+                self.solver.handle_training(i)
+                if i >= 40200:
+                    break
+            
         print("Exiting " + self.name)
 
     # def process_data(threadName, q):
@@ -60,6 +68,10 @@ class Solver(nn.Module):
 
         self.nets, self.nets_ema = build_model(args)
         # below setattrs are to make networks be children of Solver, e.g., for self.to(self.device)
+
+        # remember the initial value of ds weight
+        self.initial_lambda_ds = args.lambda_ds
+
         for name, module in self.nets.items():
             utils.print_network(module, name)
             setattr(self, name, module)
@@ -126,20 +138,26 @@ class Solver(nn.Module):
         print('Start training...')
         self.start_time = time.time()
 
-                # Handling threads
+        print(self.initial_lambda_ds)
+
+        # Handling threads
         threadID = 1
         for tName in threadList:
             thread = myThread(threadID, tName, self.workQueue, self)
             thread.start()
             self.threads.append(thread)
             threadID += 1
+        
 
         for i in range(args.resume_iter, args.total_iters):
             self.workQueue.put(i)
+        
+        
     
     def handle_training(self, i):
+        torch.autograd.set_detect_anomaly(True)
         # fetch images and labels
-        inputs = next(fetcher)
+        inputs = next(self.fetcher)
         x_real, y_org = inputs.x_src, inputs.y_src
         x_ref, x_ref2, y_trg = inputs.x_ref, inputs.x_ref2, inputs.y_ref
         z_trg, z_trg2 = inputs.z_trg, inputs.z_trg2
@@ -183,7 +201,7 @@ class Solver(nn.Module):
 
         # decay weight for diversity sensitive loss
         if self.args.lambda_ds > 0:
-            self.args.lambda_ds -= (self.itial_lambda_ds / self.args.ds_iter)
+            self.args.lambda_ds -= (self.initial_lambda_ds / self.args.ds_iter)
 
         # print out log info
         if (i+1) % self.args.print_every == 0:
