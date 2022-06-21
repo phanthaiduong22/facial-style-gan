@@ -1,2 +1,5 @@
 data
 expr
+assets
+core/__pycache__
+.DS_Store

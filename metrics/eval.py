@@ -35,7 +35,8 @@ def calculate_metrics(nets, args, step, mode):
 
     lpips_dict = OrderedDict()
     for trg_idx, trg_domain in enumerate(domains):
-        src_domains = [x for x in domains if x != trg_domain]
+        # src_domains = [x for x in domains if x != trg_domain]
+        src_domains = domains
 
         if mode == 'reference':
             path_ref = os.path.join(args.val_img_dir, trg_domain)
@@ -123,7 +124,8 @@ def calculate_fid_for_all_tasks(args, domains, step, mode):
     print('Calculating FID for all tasks...')
     fid_values = OrderedDict()
     for trg_domain in domains:
-        src_domains = [x for x in domains if x != trg_domain]
+        # src_domains = [x for x in domains if x != trg_domain]
+        src_domains = domains
 
         for src_domain in src_domains:
             task = '%s2%s' % (src_domain, trg_domain)
