@@ -118,13 +118,13 @@ class Solver(nn.Module):
             optims.discriminator.step()
 
             # train the generator
-            # g_loss, g_losses_latent = compute_g_loss(
-            #     nets, args, x_real, y_org, y_trg, z_trgs=[z_trg, z_trg2], masks=masks)
-            # self._reset_grad()
-            # g_loss.backward()
+            g_loss, g_losses_latent = compute_g_loss(
+                nets, args, x_real, y_org, y_trg, z_trgs=[z_trg, z_trg2], masks=masks)
+            self._reset_grad()
+            g_loss.backward()
             # optims.generator.step()
             # # optims.mapping_network.step()
-            # optims.style_encoder.step()
+            optims.style_encoder.step()
            
 
             g_loss, g_losses_ref = compute_g_loss(
