@@ -105,11 +105,11 @@ class Solver(nn.Module):
             masks = nets.fan.get_heatmap(x_real) if args.w_hpf > 0 else None
 
             # train the discriminator
-            # d_loss, d_losses_latent = compute_d_loss(
-            #     nets, args, x_real, y_org, y_trg, z_trg=z_trg, masks=masks)
-            # self._reset_grad()
-            # d_loss.backward()
-            # optims.discriminator.step()
+            d_loss, d_losses_latent = compute_d_loss(
+                nets, args, x_real, y_org, y_trg, z_trg=z_trg, masks=masks)
+            self._reset_grad()
+            d_loss.backward()
+            optims.discriminator.step()
 
             d_loss, d_losses_ref = compute_d_loss(
                 nets, args, x_real, y_org, y_trg, x_ref=x_ref, masks=masks)
@@ -122,10 +122,9 @@ class Solver(nn.Module):
                 nets, args, x_real, y_org, y_trg, z_trgs=[z_trg, z_trg2], masks=masks)
             self._reset_grad()
             g_loss.backward()
-            # optims.generator.step()
-            # # optims.mapping_network.step()
+            optims.generator.step()
+            optims.mapping_network.step()
             optims.style_encoder.step()
-           
 
             g_loss, g_losses_ref = compute_g_loss(
                 nets, args, x_real, y_org, y_trg, x_refs=[x_ref, x_ref2], masks=masks)
@@ -133,10 +132,9 @@ class Solver(nn.Module):
             g_loss.backward()
             optims.generator.step()
 
-
             # compute moving average of network parameters
             moving_average(nets.generator, nets_ema.generator, beta=0.999)
-            # moving_average(nets.mapping_network, nets_ema.mapping_network, beta=0.999)
+            moving_average(nets.mapping_network, nets_ema.mapping_network, beta=0.999)
             moving_average(nets.style_encoder, nets_ema.style_encoder, beta=0.999)
 
             # decay weight for diversity sensitive loss
@@ -149,9 +147,8 @@ class Solver(nn.Module):
                 elapsed = str(datetime.timedelta(seconds=elapsed))[:-7]
                 log = "Elapsed time [%s], Iteration [%i/%i], " % (elapsed, i+1, args.total_iters)
                 all_losses = dict()
-                # for loss, prefix in zip([d_losses_latent, d_losses_ref, g_losses_latent, g_losses_ref],
-                                        # ['D/latent_', 'D/ref_', 'G/latent_', 'G/ref_']):
-                for loss, prefix in zip([ d_losses_ref, g_losses_ref],[ 'D/ref_', 'G/ref_']):                     
+                for loss, prefix in zip([d_losses_latent, d_losses_ref, g_losses_latent, g_losses_ref],
+                                        ['D/latent_', 'D/ref_', 'G/latent_', 'G/ref_']):
                     for key, value in loss.items():
                         all_losses[prefix + key] = value
                 all_losses['G/lambda_ds'] = args.lambda_ds
@@ -169,7 +166,7 @@ class Solver(nn.Module):
 
             # compute FID and LPIPS if necessary
             if (i+1) % args.eval_every == 0:
-                # calculate_metrics(nets_ema, args, i+1, mode='latent')
+                calculate_metrics(nets_ema, args, i+1, mode='latent')
                 calculate_metrics(nets_ema, args, i+1, mode='reference')
 
     @torch.no_grad()
@@ -188,18 +185,18 @@ class Solver(nn.Module):
 
         fname = ospj(args.result_dir, 'Latent_' + args.filename)
         print('Working on {}...'.format(fname))
-        # z_trg_list = []
-        # for i in range(args.latent_sample_per_domain):
-        #     z_trg_list.append(torch.randn(1, args.latent_dim).to(src.x.device))
+        z_trg_list = []
+        for i in range(args.latent_sample_per_domain):
+            z_trg_list.append(torch.randn(1, args.latent_dim).to(src.x.device))
         y_trg_list = []
         for i in range(args.num_domains):
             y_trg_list.append(torch.tensor([i]).to(src.x.device).type(torch.long))
-        # utils.translate_using_latent(nets_ema, args, src.x, y_trg_list, z_trg_list, 0.6, fname)
+        utils.translate_using_latent(nets_ema, args, src.x, y_trg_list, z_trg_list, 0.6, fname)
         
-        # if args.make_video > 0:
-        #     fname = ospj(args.result_dir, 'video_ref.mp4')
-        #     print('Working on {}...'.format(fname))
-        #     utils.video_ref(nets_ema, args, src.x, ref.x, ref.y, fname)    
+        if args.make_video > 0:
+            fname = ospj(args.result_dir, 'video_ref.mp4')
+            print('Working on {}...'.format(fname))
+            utils.video_ref(nets_ema, args, src.x, ref.x, ref.y, fname)    
         
     @torch.no_grad()
     def evaluate(self):
@@ -207,7 +204,7 @@ class Solver(nn.Module):
         nets_ema = self.nets_ema
         resume_iter = args.resume_iter
         self._load_checkpoint(args.resume_iter)
-        # calculate_metrics(nets_ema, args, step=resume_iter, mode='latent')
+        calculate_metrics(nets_ema, args, step=resume_iter, mode='latent')
         calculate_metrics(nets_ema, args, step=resume_iter, mode='reference')
 
 
@@ -221,10 +218,10 @@ def compute_d_loss(nets, args, x_real, y_org, y_trg, z_trg=None, x_ref=None, mas
 
     # with fake images
     with torch.no_grad():
-        # if z_trg is not None:
-        #     s_trg = nets.mapping_network(z_trg, y_trg)
-        # else:  # x_ref is not None
-        s_trg = nets.style_encoder(x_ref, y_trg)
+        if z_trg is not None:
+            s_trg = nets.mapping_network(z_trg, y_trg)
+        else:  # x_ref is not None
+            s_trg = nets.style_encoder(x_ref, y_trg)
 
         x_fake = nets.generator(x_real, s_trg, masks=masks)
     out = nets.discriminator(x_fake, y_trg)
@@ -244,10 +241,10 @@ def compute_g_loss(nets, args, x_real, y_org, y_trg, z_trgs=None, x_refs=None, m
         x_ref, x_ref2 = x_refs
 
     # adversarial loss
-    # if z_trgs is not None:
-    #     s_trg = nets.mapping_network(z_trg, y_trg)
-    # else:
-    s_trg = nets.style_encoder(x_ref, y_trg)
+    if z_trgs is not None:
+        s_trg = nets.mapping_network(z_trg, y_trg)
+    else:
+        s_trg = nets.style_encoder(x_ref, y_trg)
 
     x_fake = nets.generator(x_real, s_trg, masks=masks)
     out = nets.discriminator(x_fake, y_trg)
@@ -258,10 +255,10 @@ def compute_g_loss(nets, args, x_real, y_org, y_trg, z_trgs=None, x_refs=None, m
     loss_sty = torch.mean(torch.abs(s_pred - s_trg))
 
     # diversity sensitive loss
-    # if z_trgs is not None:
-    #     s_trg2 = nets.mapping_network(z_trg2, y_trg)
-    # else:
-    s_trg2 = nets.style_encoder(x_ref2, y_trg)
+    if z_trgs is not None:
+        s_trg2 = nets.mapping_network(z_trg2, y_trg)
+    else:
+        s_trg2 = nets.style_encoder(x_ref2, y_trg)
     x_fake2 = nets.generator(x_real, s_trg2, masks=masks)
     x_fake2 = x_fake2.detach()
     loss_ds = torch.mean(torch.abs(x_fake - x_fake2))

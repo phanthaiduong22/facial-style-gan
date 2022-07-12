@@ -38,4 +38,4 @@ class CheckpointIO(object):
         else:
             module_dict = torch.load(fname, map_location=torch.device('cpu'))
         for name, module in self.module_dict.items():
-            module.load_state_dict(module_dict[name], False)
+            module.load_state_dict(module_dict[name])

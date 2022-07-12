@@ -2,8 +2,8 @@ import pyautogui
 import time
  
 def click(): 
-    print("click")
-    time.sleep(300)     
+    print("click after 10min")
+    time.sleep(10*60)     
     pyautogui.click()
  
 def main():
