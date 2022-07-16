@@ -100,6 +100,7 @@ def translate_using_latent(nets, args, x_src, y_trg_list, z_trg_list, psi, filen
 
 @torch.no_grad()
 def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename):
+    print("translate_using_reference: ", y_ref)
     N, C, H, W = x_src.size()
     wb = torch.ones(1, C, H, W).to(x_src.device)
     x_src_with_wb = torch.cat([wb, x_src], dim=0)
@@ -107,15 +108,18 @@ def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename):
     masks = nets.fan.get_heatmap(x_src) if args.w_hpf > 0 else None
     s_ref = nets.style_encoder(x_ref, y_ref)
     s_ref_list = s_ref.unsqueeze(1).repeat(1, N, 1)
-    x_concat = [x_src_with_wb]
     for i, s_ref in enumerate(s_ref_list):
+        x_concat = [x_src_with_wb]
         x_fake = nets.generator(x_src, s_ref, masks=masks)
         x_fake_with_ref = torch.cat([x_ref[i:i+1], x_fake], dim=0)
-        x_concat += [x_fake_with_ref]
+        x_concat = x_concat + [x_fake_with_ref]
+        x_concat = torch.cat(x_concat, dim=0)
 
-    x_concat = torch.cat(x_concat, dim=0)
-    save_image(x_concat, N+1, filename)
-    del x_concat
+        # duong: handle new file name
+        idx = filename.index(".")
+        new_file_name = filename[:idx] + "_" + str(i) + filename[idx:]
+        save_image(x_concat, N+1, new_file_name)
+        del x_concat
 
 
 @torch.no_grad()

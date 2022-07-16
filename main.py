@@ -69,8 +69,8 @@ def main(args):
         solver.train(loaders)
     elif args.mode == 'sample':
         solver = Solver(args)
-        assert len(subdirs(args.src_dir)) == args.num_domains
-        assert len(subdirs(args.ref_dir)) == args.num_domains
+        # assert len(subdirs(args.src_dir)) == args.num_domains
+        # assert len(subdirs(args.ref_dir)) == args.num_domains
         loaders = Munch(src=get_test_loader(root=args.src_dir,
                                             img_size=args.img_size,
                                             batch_size=args.val_batch_size,

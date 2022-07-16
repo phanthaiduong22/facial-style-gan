@@ -178,25 +178,28 @@ class Solver(nn.Module):
 
         src = next(InputFetcher(loaders.src, None, args.latent_dim, 'test'))
         ref = next(InputFetcher(loaders.ref, None, args.latent_dim, 'test'))
+        # print(ref)
+        
 
         fname = ospj(args.result_dir, args.filename)
         print('Working on {}...'.format(fname))
         utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname)
 
-        fname = ospj(args.result_dir, 'Latent_' + args.filename)
-        print('Working on {}...'.format(fname))
-        z_trg_list = []
-        for i in range(args.latent_sample_per_domain):
-            z_trg_list.append(torch.randn(1, args.latent_dim).to(src.x.device))
-        y_trg_list = []
-        for i in range(args.num_domains):
-            y_trg_list.append(torch.tensor([i]).to(src.x.device).type(torch.long))
-        utils.translate_using_latent(nets_ema, args, src.x, y_trg_list, z_trg_list, 0.6, fname)
+        # no need for latent only
+        # fname = ospj(args.result_dir, 'Latent_' + args.filename)
+        # # print('Working on {}...'.format(fname))
+        # z_trg_list = []
+        # for i in range(args.latent_sample_per_domain):
+        #     z_trg_list.append(torch.randn(1, args.latent_dim).to(src.x.device))
+        # y_trg_list = []
+        # for i in range(args.num_domains):
+        #     y_trg_list.append(torch.tensor([i]).to(src.x.device).type(torch.long))
+        # utils.translate_using_latent(nets_ema, args, src.x, y_trg_list, z_trg_list, 0.6, fname)
         
-        if args.make_video > 0:
-            fname = ospj(args.result_dir, 'video_ref.mp4')
-            print('Working on {}...'.format(fname))
-            utils.video_ref(nets_ema, args, src.x, ref.x, ref.y, fname)    
+        # if args.make_video > 0:
+        #     fname = ospj(args.result_dir, 'video_ref.mp4')
+        #     print('Working on {}...'.format(fname))
+        #     utils.video_ref(nets_ema, args, src.x, ref.x, ref.y, fname)    
         
     @torch.no_grad()
     def evaluate(self):
