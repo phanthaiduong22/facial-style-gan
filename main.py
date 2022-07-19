@@ -189,7 +189,7 @@ if __name__ == '__main__':
                         help='input directory when aligning faces')
     parser.add_argument('--out_dir', type=str, default='assets/representative/celeba_hq/src/female',
                         help='output directory when aligning faces')
-    parser.add_argument('--print_bundle', type=int, default='assets/representative/celeba_hq/src/female',
+    parser.add_argument('--print_bundle', type=int, default=1,
                         help='output directory when aligning faces')
 
     # face alignment
