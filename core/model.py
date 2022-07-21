@@ -205,36 +205,36 @@ class Generator(nn.Module):
         return self.to_rgb(x)
 
 
-class MappingNetwork(nn.Module):
-    def __init__(self, latent_dim=16, style_dim=64, num_domains=2, max_hidden_dim=512):
-        super().__init__()
-        layers = []
-        layers += [nn.Linear(latent_dim, max_hidden_dim)]
-        layers += [nn.ReLU()]
-        for _ in range(3):
-            layers += [nn.Linear(max_hidden_dim, max_hidden_dim)]
-            layers += [nn.ReLU()]
-        self.shared = nn.Sequential(*layers)
+# class MappingNetwork(nn.Module):
+#     def __init__(self, latent_dim=16, style_dim=64, num_domains=2, max_hidden_dim=512):
+#         super().__init__()
+#         layers = []
+#         layers += [nn.Linear(latent_dim, max_hidden_dim)]
+#         layers += [nn.ReLU()]
+#         for _ in range(3):
+#             layers += [nn.Linear(max_hidden_dim, max_hidden_dim)]
+#             layers += [nn.ReLU()]
+#         self.shared = nn.Sequential(*layers)
 
-        self.unshared = nn.ModuleList()
-        for _ in range(num_domains):
-            self.unshared += [nn.Sequential(nn.Linear(max_hidden_dim, max_hidden_dim),
-                                            nn.ReLU(),
-                                            nn.Linear(max_hidden_dim, max_hidden_dim),
-                                            nn.ReLU(),
-                                            nn.Linear(max_hidden_dim, max_hidden_dim),
-                                            nn.ReLU(),
-                                            nn.Linear(max_hidden_dim, style_dim))]
+#         self.unshared = nn.ModuleList()
+#         for _ in range(num_domains):
+#             self.unshared += [nn.Sequential(nn.Linear(max_hidden_dim, max_hidden_dim),
+#                                             nn.ReLU(),
+#                                             nn.Linear(max_hidden_dim, max_hidden_dim),
+#                                             nn.ReLU(),
+#                                             nn.Linear(max_hidden_dim, max_hidden_dim),
+#                                             nn.ReLU(),
+#                                             nn.Linear(max_hidden_dim, style_dim))]
 
-    def forward(self, z, y):
-        h = self.shared(z)
-        out = []
-        for layer in self.unshared:
-            out += [layer(h)]
-        out = torch.stack(out, dim=1)  # (batch, num_domains, style_dim)
-        idx = torch.LongTensor(range(y.size(0))).to(y.device)
-        s = out[idx, y]  # (batch, style_dim)
-        return s
+#     def forward(self, z, y):
+#         h = self.shared(z)
+#         out = []
+#         for layer in self.unshared:
+#             out += [layer(h)]
+#         out = torch.stack(out, dim=1)  # (batch, num_domains, style_dim)
+#         idx = torch.LongTensor(range(y.size(0))).to(y.device)
+#         s = out[idx, y]  # (batch, style_dim)
+#         return s
 
 class StyleEncoder(nn.Module):
     def __init__(self, img_size=256, style_dim=64, num_domains=2, max_conv_dim=512, efficient=0):
@@ -299,19 +299,19 @@ class Discriminator(nn.Module):
 
 def build_model(args):
     generator = Generator(args.img_size,args.style_dim,args.alpha,args.w_hpf,args.efficient)
-    mapping_network = MappingNetwork(args.latent_dim,args.style_dim,args.num_domains,args.alpha)
+    # mapping_network = MappingNetwork(args.latent_dim,args.style_dim,args.num_domains,args.alpha)
     style_encoder = StyleEncoder(args.img_size,args.style_dim,args.num_domains,args.alpha,args.efficient)
     discriminator = Discriminator(args.img_size,args.num_domains,args.alpha)
     generator_ema = copy.deepcopy(generator)
-    mapping_network_ema = copy.deepcopy(mapping_network)
+    # mapping_network_ema = copy.deepcopy(mapping_network)
     style_encoder_ema = copy.deepcopy(style_encoder)
 
     nets = Munch(generator=generator,
-                 mapping_network=mapping_network,
+                #  mapping_network=mapping_network,
                  style_encoder=style_encoder,
                  discriminator=discriminator)
     nets_ema = Munch(generator=generator_ema,
-                     mapping_network=mapping_network_ema,
+                    #  mapping_network=mapping_network_ema,
                      style_encoder=style_encoder_ema)
 
     if args.w_hpf > 0:

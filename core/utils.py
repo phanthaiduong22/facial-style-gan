@@ -74,30 +74,6 @@ def translate_and_reconstruct(nets, args, x_src, y_src, x_ref, y_ref, filename):
     del x_concat
 
 
-# @torch.no_grad()
-# def translate_using_latent(nets, args, x_src, y_trg_list, z_trg_list, psi, filename):
-#     N, C, H, W = x_src.size()
-#     latent_dim = z_trg_list[0].size(1)
-#     x_concat = [x_src]
-#     masks = nets.fan.get_heatmap(x_src) if args.w_hpf > 0 else None
-
-#     for i, y_trg in enumerate(y_trg_list):
-#         z_many = torch.randn(10000, latent_dim).to(x_src.device)
-#         y_many = torch.LongTensor(10000).to(x_src.device).fill_(y_trg[0])
-#         s_many = nets.mapping_network(z_many, y_many)
-#         s_avg = torch.mean(s_many, dim=0, keepdim=True)
-#         s_avg = s_avg.repeat(N, 1)
-
-#         for z_trg in z_trg_list:
-#             s_trg = nets.mapping_network(z_trg, y_trg)
-#             s_trg = torch.lerp(s_avg, s_trg, psi)
-#             x_fake = nets.generator(x_src, s_trg, masks=masks)
-#             x_concat += [x_fake]
-
-#     x_concat = torch.cat(x_concat, dim=0)
-#     save_image(x_concat, N, filename)
-
-
 @torch.no_grad()
 def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename, print_bundle):
     N, C, H, W = x_src.size()
