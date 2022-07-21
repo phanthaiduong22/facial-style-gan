@@ -14,10 +14,3 @@ TinyStarGAN-v2 celeba_hq
 python main.py --mode profile --num_domains 2 --w_hpf 1 \
                --alpha 128 --efficient 1
 ```
-
-TinyStarGAN-v2 afhq
-
-```bash
-python main.py --mode profile --num_domains 3 --w_hpf 0 \
-               --alpha 128 --efficient 1
-```

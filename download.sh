@@ -22,18 +22,6 @@ elif  [ $FILE == "pretrained-tiny-network-celeba-hq" ]; then
     OUT_FILE=./expr/checkpoints/tiny_celeba_hq/100000_nets_ema.ckpt
     wget --load-cookies /tmp/cookies.txt "https://docs.google.com/uc?export=download&confirm=$(wget --quiet --save-cookies /tmp/cookies.txt --keep-session-cookies --no-check-certificate 'https://docs.google.com/uc?export=download&id=1v4Lc15WZi2mDfLKF3PQgnsHWxi5_hcLU' -O- | sed -rn 's/.*confirm=([0-9A-Za-z_]+).*/\1\n/p')&id=1v4Lc15WZi2mDfLKF3PQgnsHWxi5_hcLU" -O $OUT_FILE && rm -rf /tmp/cookies.txt
 
-elif  [ $FILE == "pretrained-network-afhq" ]; then
-    URL=https://www.dropbox.com/s/etwm810v25h42sn/100000_nets_ema.ckpt?dl=0
-    mkdir -p ./expr/checkpoints/afhq
-    OUT_FILE=./expr/checkpoints/afhq/100000_nets_ema.ckpt
-    wget -N $URL -O $OUT_FILE
-
-elif  [ $FILE == "pretrained-tiny-network-afhq" ]; then
-    URL='https://docs.google.com/uc?export=download&id=1mHdBzEZaGHNQDp9lJp8gMRCaxA1UBtAG'
-    mkdir -p ./expr/checkpoints/tiny_afhq
-    OUT_FILE=./expr/checkpoints/tiny_afhq/100000_nets_ema.ckpt
-    wget --no-check-certificate $URL -O $OUT_FILE
-
 elif  [ $FILE == "wing" ]; then
     URL=https://www.dropbox.com/s/tjxpypwpt38926e/wing.ckpt?dl=0
     mkdir -p ./expr/checkpoints/
@@ -46,14 +34,6 @@ elif  [ $FILE == "wing" ]; then
 elif  [ $FILE == "celeba-hq-dataset" ]; then
     URL=https://www.dropbox.com/s/f7pvjij2xlpff59/celeba_hq.zip?dl=0
     ZIP_FILE=./data/celeba_hq.zip
-    mkdir -p ./data
-    wget -N $URL -O $ZIP_FILE
-    unzip $ZIP_FILE -d ./data
-    rm $ZIP_FILE
-
-elif  [ $FILE == "afhq-dataset" ]; then
-    URL=https://www.dropbox.com/s/t9l9o3vsx2jai3z/afhq.zip?dl=0
-    ZIP_FILE=./data/afhq.zip
     mkdir -p ./data
     wget -N $URL -O $ZIP_FILE
     unzip $ZIP_FILE -d ./data
