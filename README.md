@@ -19,6 +19,7 @@ Th.S Phạm Minh Hoàng
 ## Báo cáo
 
 Latex:
+
 Word:
 
 ## Hướng Dẫn Train Và Sử Dụng FacialStyleTransfer
