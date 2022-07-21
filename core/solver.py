@@ -182,6 +182,8 @@ class Solver(nn.Module):
 
         fname = ospj(args.result_dir, args.filename)
         print('Working on {}...'.format(fname))
+        if args.print_bundle == None:
+            args.print_bundle = 1
         utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname, args.print_bundle)
         
     @torch.no_grad()
