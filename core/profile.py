@@ -36,7 +36,7 @@ class Profile(nn.Module):
         
         input_image = torch.randn(1, 3, args.img_size, args.img_size).to(self.device)
         y_index = torch.zeros(1,dtype = torch.long).to(self.device)
-        laten_noise = torch.randn(1, args.latent_dim).to(self.device)
+        # laten_noise = torch.randn(1, args.latent_dim).to(self.device)
         style_vector = torch.randn(1, args.style_dim).to(self.device)
         
         style_encoder_params = self.parameter_count(nets.style_encoder)

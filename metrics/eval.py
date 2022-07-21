@@ -70,7 +70,7 @@ def calculate_metrics(nets, args, step, mode):
                 group_of_images = []
                 for j in range(args.num_outs_per_domain):
                     if mode == 'latent':
-                        1
+                        1 # we don't use latent mode
                         # z_trg = torch.randn(N, args.latent_dim).to(device)
                         # s_trg = nets.mapping_network(z_trg, y_trg)
                     else:
