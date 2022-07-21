@@ -18,7 +18,6 @@ import torch
 from core.data_loader import get_train_loader
 from core.data_loader import get_test_loader
 from core.solver import Solver
-# from core.distiller import Distiller
 from core.profile import Profile
 
 
@@ -39,7 +38,7 @@ def main(args):
     if args.mode == 'profile':
         profile = Profile(args)
         profile.evaluate()    
-    elif args.mode == 'train': # or args.mode == 'distill_train'
+    elif args.mode == 'train':
         assert len(subdirs(args.train_img_dir)) == args.num_domains
         assert len(subdirs(args.val_img_dir)) == args.num_domains
         loaders = Munch(src=get_train_loader(root=args.train_img_dir,
@@ -61,16 +60,10 @@ def main(args):
                                             batch_size=args.val_batch_size,
                                             shuffle=True,
                                             num_workers=args.num_workers))
-        # if args.mode == 'distill_train':
-        #     distiller = Distiller(args)
-        #     distiller.train(loaders)    
-        # else:
         solver = Solver(args)
         solver.train(loaders)
     elif args.mode == 'sample':
         solver = Solver(args)
-        # assert len(subdirs(args.src_dir)) == args.num_domains
-        # assert len(subdirs(args.ref_dir)) == args.num_domains
         loaders = Munch(src=get_test_loader(root=args.src_dir,
                                             img_size=args.img_size,
                                             batch_size=args.val_batch_size,
@@ -151,7 +144,7 @@ if __name__ == '__main__':
 
     # misc
     parser.add_argument('--mode', type=str, required=True,
-                        choices=['train', 'sample', 'eval', 'align','distill_train', 'profile'],
+                        choices=['train', 'sample', 'eval', 'align', 'profile'],
                         help='This argument is used in solver')
     parser.add_argument('--num_workers', type=int, default=4,
                         help='Number of workers used in DataLoader')
@@ -190,7 +183,7 @@ if __name__ == '__main__':
     parser.add_argument('--out_dir', type=str, default='assets/representative/celeba_hq/src/female',
                         help='output directory when aligning faces')
     parser.add_argument('--print_bundle', type=int, default=1,
-                        help='output directory when aligning faces')
+                        help='to export bundle of images when sample')
 
     # face alignment
     parser.add_argument('--wing_path', type=str, default='expr/checkpoints/wing.ckpt')
@@ -202,18 +195,5 @@ if __name__ == '__main__':
     parser.add_argument('--save_every', type=int, default=10000)
     parser.add_argument('--eval_every', type=int, default=50000)
 
-    # Distillation
-    parser.add_argument('--teacher_checkpoint_dir', type=str, default='expr/checkpoints/celeba_hq',
-                        help='Directory for saving network checkpoints')
-    parser.add_argument('--teacher_resume_iter', type=int, default=100000,
-                        help='Iterations to resume training/testing')
-    parser.add_argument('--lambda_ciadv', type=int, default=1,
-                        help='Cross Image Adversarial Losses')
-    parser.add_argument('--lambda_csadv', type=int, default=1,
-                        help='Cross Style Adversarial Losses')
-    parser.add_argument('--lambda_csut', type=int, default=1,
-                        help='Cross Style Utilization Losses')
-    parser.add_argument('--lambda_csaprv', type=int, default=1,
-                        help='Cross Source Attributes Preservation Losses')
     args = parser.parse_args()
     main(args)
