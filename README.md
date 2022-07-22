@@ -26,4 +26,4 @@ Word:
 
 Tạo một bản copy từ [Google Colab](https://colab.research.google.com/drive/1Gr8LymTaAuD9_FFmhZBy-gHit2xPr9VG?usp=sharing) và làm theo hướng dẫn
 
-## Tài Liệu Tham Khảo
+## [Tài Liệu Tham Khảo](https://drive.google.com/drive/folders/1FdVNNioN6XolL8YPPyBjrCi7vrS3ZTLt?usp=sharing)
