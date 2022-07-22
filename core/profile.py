@@ -36,11 +36,11 @@ class Profile(nn.Module):
         
         input_image = torch.randn(1, 3, args.img_size, args.img_size).to(self.device)
         y_index = torch.zeros(1,dtype = torch.long).to(self.device)
-        laten_noise = torch.randn(1, args.latent_dim).to(self.device)
+        # laten_noise = torch.randn(1, args.latent_dim).to(self.device)
         style_vector = torch.randn(1, args.style_dim).to(self.device)
         
         style_encoder_params = self.parameter_count(nets.style_encoder)
-        mapping_network_params = self.parameter_count(nets.mapping_network)
+        # mapping_network_params = self.parameter_count(nets.mapping_network)
         generator_params = self.parameter_count(nets.generator)
         discriminator_params = self.parameter_count(nets.discriminator)
 
@@ -58,12 +58,12 @@ class Profile(nn.Module):
         style_encoder_macs = profile_macs(nets.style_encoder, (input_image, y_index))
         print('[style_encoder] Total number of MACs : %.3f GMACs' % (style_encoder_macs/1e9))
         
-        if print_networks:
-            print('mapping_network')
-            print(nets.mapping_network)
-        print('[mapping_network] Total number of parameters : %.3f M' % (mapping_network_params))
-        mapping_network_macs = profile_macs(nets.mapping_network, (laten_noise, y_index))
-        print('[mapping_network] Total number of MACs : %.7f GMACs' % (mapping_network_macs/1e9))
+        # if print_networks:
+        #     print('mapping_network')
+        #     print(nets.mapping_network)
+        # print('[mapping_network] Total number of parameters : %.3f M' % (mapping_network_params))
+        # mapping_network_macs = profile_macs(nets.mapping_network, (laten_noise, y_index))
+        # print('[mapping_network] Total number of MACs : %.7f GMACs' % (mapping_network_macs/1e9))
         
         if print_networks:
             print('generator')
@@ -72,5 +72,7 @@ class Profile(nn.Module):
         generator_macs = profile_macs(nets.generator, (input_image, style_vector))
         print('[generator] Total number of MACs : %.3f GMACs' % (generator_macs/1e9))
         
-        print('Total Parameters : %.3f M' % (generator_params + mapping_network_params + style_encoder_params))
-        print('Total number of MACs : %.3f GMACs' % ((generator_macs + mapping_network_macs + style_encoder_macs)/1e9))
+        # print('Total Parameters : %.3f M' % (generator_params + mapping_network_params + style_encoder_params))
+        # print('Total number of MACs : %.3f GMACs' % ((generator_macs + mapping_network_macs + style_encoder_macs)/1e9))
+        print('Total Parameters : %.3f M' % (generator_params + style_encoder_params))
+        print('Total number of MACs : %.3f GMACs' % ((generator_macs + style_encoder_macs)/1e9))

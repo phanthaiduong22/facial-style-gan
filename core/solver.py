@@ -123,16 +123,14 @@ class Solver(nn.Module):
             # self._reset_grad()
             # g_loss.backward()
             # optims.generator.step()
-            # # optims.mapping_network.step()
+            # optims.mapping_network.step()
             # optims.style_encoder.step()
-           
 
             g_loss, g_losses_ref = compute_g_loss(
                 nets, args, x_real, y_org, y_trg, x_refs=[x_ref, x_ref2], masks=masks)
             self._reset_grad()
             g_loss.backward()
             optims.generator.step()
-
 
             # compute moving average of network parameters
             moving_average(nets.generator, nets_ema.generator, beta=0.999)
@@ -150,7 +148,7 @@ class Solver(nn.Module):
                 log = "Elapsed time [%s], Iteration [%i/%i], " % (elapsed, i+1, args.total_iters)
                 all_losses = dict()
                 # for loss, prefix in zip([d_losses_latent, d_losses_ref, g_losses_latent, g_losses_ref],
-                                        # ['D/latent_', 'D/ref_', 'G/latent_', 'G/ref_']):
+                #                         ['D/latent_', 'D/ref_', 'G/latent_', 'G/ref_']):
                 for loss, prefix in zip([ d_losses_ref, g_losses_ref],[ 'D/ref_', 'G/ref_']):                     
                     for key, value in loss.items():
                         all_losses[prefix + key] = value
@@ -184,22 +182,9 @@ class Solver(nn.Module):
 
         fname = ospj(args.result_dir, args.filename)
         print('Working on {}...'.format(fname))
-        utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname)
-
-        fname = ospj(args.result_dir, 'Latent_' + args.filename)
-        print('Working on {}...'.format(fname))
-        z_trg_list = []
-        for i in range(args.latent_sample_per_domain):
-            z_trg_list.append(torch.randn(1, args.latent_dim).to(src.x.device))
-        y_trg_list = []
-        for i in range(args.num_domains):
-            y_trg_list.append(torch.tensor([i]).to(src.x.device).type(torch.long))
-        # utils.translate_using_latent(nets_ema, args, src.x, y_trg_list, z_trg_list, 0.6, fname)
-        
-        if args.make_video > 0:
-            fname = ospj(args.result_dir, 'video_ref.mp4')
-            print('Working on {}...'.format(fname))
-            utils.video_ref(nets_ema, args, src.x, ref.x, ref.y, fname)    
+        if args.print_bundle == None:
+            args.print_bundle = 1
+        utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname, args.print_bundle)
         
     @torch.no_grad()
     def evaluate(self):

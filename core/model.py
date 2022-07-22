@@ -205,57 +205,26 @@ class Generator(nn.Module):
         return self.to_rgb(x)
 
 
-class MappingNetwork(nn.Module):
-    def __init__(self, latent_dim=16, style_dim=64, num_domains=2, max_hidden_dim=512):
-        super().__init__()
-        layers = []
-        layers += [nn.Linear(latent_dim, max_hidden_dim)]
-        layers += [nn.ReLU()]
-        for _ in range(3):
-            layers += [nn.Linear(max_hidden_dim, max_hidden_dim)]
-            layers += [nn.ReLU()]
-        self.shared = nn.Sequential(*layers)
-
-        self.unshared = nn.ModuleList()
-        for _ in range(num_domains):
-            self.unshared += [nn.Sequential(nn.Linear(max_hidden_dim, max_hidden_dim),
-                                            nn.ReLU(),
-                                            nn.Linear(max_hidden_dim, max_hidden_dim),
-                                            nn.ReLU(),
-                                            nn.Linear(max_hidden_dim, max_hidden_dim),
-                                            nn.ReLU(),
-                                            nn.Linear(max_hidden_dim, style_dim))]
-
-    def forward(self, z, y):
-        h = self.shared(z)
-        out = []
-        for layer in self.unshared:
-            out += [layer(h)]
-        out = torch.stack(out, dim=1)  # (batch, num_domains, style_dim)
-        idx = torch.LongTensor(range(y.size(0))).to(y.device)
-        s = out[idx, y]  # (batch, style_dim)
-        return s
-
-# class StyleDiscriminator(nn.Module):
-#     def __init__(self, style_dim=64, num_domains=2, max_hidden_dim=512):
+# class MappingNetwork(nn.Module):
+#     def __init__(self, latent_dim=16, style_dim=64, num_domains=2, max_hidden_dim=512):
 #         super().__init__()
 #         layers = []
-#         layers += [nn.Linear(style_dim, max_hidden_dim)]
-#         layers += [nn.LeakyReLU()]
+#         layers += [nn.Linear(latent_dim, max_hidden_dim)]
+#         layers += [nn.ReLU()]
 #         for _ in range(3):
 #             layers += [nn.Linear(max_hidden_dim, max_hidden_dim)]
-#             layers += [nn.LeakyReLU()]
+#             layers += [nn.ReLU()]
 #         self.shared = nn.Sequential(*layers)
 
 #         self.unshared = nn.ModuleList()
 #         for _ in range(num_domains):
 #             self.unshared += [nn.Sequential(nn.Linear(max_hidden_dim, max_hidden_dim),
-#                                             nn.LeakyReLU(),
+#                                             nn.ReLU(),
 #                                             nn.Linear(max_hidden_dim, max_hidden_dim),
-#                                             nn.LeakyReLU(),
+#                                             nn.ReLU(),
 #                                             nn.Linear(max_hidden_dim, max_hidden_dim),
-#                                             nn.LeakyReLU(),
-#                                             nn.Linear(max_hidden_dim, 1))]
+#                                             nn.ReLU(),
+#                                             nn.Linear(max_hidden_dim, style_dim))]
 
 #     def forward(self, z, y):
 #         h = self.shared(z)
@@ -265,8 +234,8 @@ class MappingNetwork(nn.Module):
 #         out = torch.stack(out, dim=1)  # (batch, num_domains, style_dim)
 #         idx = torch.LongTensor(range(y.size(0))).to(y.device)
 #         s = out[idx, y]  # (batch, style_dim)
-#         return s 
-    
+#         return s
+
 class StyleEncoder(nn.Module):
     def __init__(self, img_size=256, style_dim=64, num_domains=2, max_conv_dim=512, efficient=0):
         super().__init__()
@@ -351,18 +320,3 @@ def build_model(args):
         nets_ema.fan = fan
 
     return nets, nets_ema
-
-# def build_teacher_model(args):
-#     generator = Generator(args.img_size, args.style_dim, w_hpf=args.w_hpf).eval()
-#     mapping_network = MappingNetwork(args.latent_dim, args.style_dim, args.num_domains).eval()
-#     style_encoder = StyleEncoder(args.img_size, args.style_dim, args.num_domains).eval()
-
-#     nets = Munch(generator=generator,
-#                  mapping_network=mapping_network,
-#                  style_encoder=style_encoder)
-
-#     if args.w_hpf > 0:
-#         fan = FAN(fname_pretrained=args.wing_path).eval()
-#         nets.fan = fan
-
-#     return nets

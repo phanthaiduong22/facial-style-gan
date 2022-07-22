@@ -2,11 +2,12 @@ import pyautogui
 import time
  
 def click(): 
-    time.sleep(5)     
+    print("click after 10min")
+    time.sleep(10*60)     
     pyautogui.click()
  
 def main():
-    for i in range(20): 
+    while(1):
         click()
  
 main()
