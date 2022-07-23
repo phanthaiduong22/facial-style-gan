@@ -16,12 +16,12 @@ Th.S Phạm Minh Hoàng
 
 # FacialStyleGAN
 
-#### [Báo cáo](https://drive.google.com/drive/folders/1Kfbmlk1EUWPAZ1PPbvZblwG_DeShu0Zb)
-
 ## Hướng Dẫn Train Và Sử Dụng FacialStyleGAN
 
 #### Để dễ dàng cài đặt nhóm sinh viên đã chuẩn bị file Google Colab, có thể tạo một bản copy và chạy theo hướng dẫn chi tiết trong Google Colab
 
 #### [Google Colab](https://colab.research.google.com/drive/1Gr8LymTaAuD9_FFmhZBy-gHit2xPr9VG?usp=sharing)
 
-## [Tài Liệu Tham Khảo](https://drive.google.com/drive/folders/1FdVNNioN6XolL8YPPyBjrCi7vrS3ZTLt?usp=sharing)
+#### [Báo cáo](https://drive.google.com/drive/folders/1Kfbmlk1EUWPAZ1PPbvZblwG_DeShu0Zb)
+
+#### [Tài Liệu Tham Khảo](https://drive.google.com/drive/folders/1FdVNNioN6XolL8YPPyBjrCi7vrS3ZTLt?usp=sharing)
