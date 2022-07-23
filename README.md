@@ -16,11 +16,7 @@ Th.S Phạm Minh Hoàng
 
 # FacialStyleGAN
 
-## Báo cáo
-
-Latex:
-
-Word:
+## [Báo cáo](https://drive.google.com/drive/folders/1Kfbmlk1EUWPAZ1PPbvZblwG_DeShu0Zb)
 
 ## Hướng Dẫn Train Và Sử Dụng FacialStyleTransfer
 
