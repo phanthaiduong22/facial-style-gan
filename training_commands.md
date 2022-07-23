@@ -12,3 +12,11 @@ python main.py --mode train --num_domains 2 --w_hpf 1 \
                --train_img_dir data/celeba_hq/train \
                --val_img_dir data/celeba_hq/val
 ```
+
+```bash
+python main.py --mode train --num_domains 2 --w_hpf 1 \
+               --alpha 128 --efficient 1 \
+               --lambda_reg 1 --lambda_sty 1 --lambda_ds 1 --lambda_cyc 1 \
+               --train_img_dir data/celeba_hq/train --batch_size 8 --num_workers 4 --total_iters 100000 --resume_iter 0 --save_every 5000\
+               --val_img_dir data/celeba_hq/val --checkpoint_dir expr/checkpoints/tiny_org_celeba_hq --eval_dir expr/eval/tiny_org_celeba_hq
+```
