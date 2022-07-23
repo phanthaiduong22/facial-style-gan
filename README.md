@@ -18,7 +18,7 @@ Th.S Phạm Minh Hoàng
 
 #### [Báo cáo](https://drive.google.com/drive/folders/1Kfbmlk1EUWPAZ1PPbvZblwG_DeShu0Zb)
 
-## Hướng Dẫn Train Và Sử Dụng FacialStyleTransfer
+## Hướng Dẫn Train Và Sử Dụng FacialStyleGAN
 
 #### Để dễ dàng cài đặt nhóm sinh viên đã chuẩn bị file Google Colab, có thể tạo một bản copy và chạy theo hướng dẫn chi tiết trong Google Colab
 
