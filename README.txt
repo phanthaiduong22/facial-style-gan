@@ -4,9 +4,9 @@
 
 ## Thành Viên Nhóm
 
-Trần Duy Đạt - 18120015 - doodal.jin@gmail.com - 0384364454
+Trần Duy Đạt - 18120015
 
-Phan Thái Dương - 18120020 - phanthaiduong2000@gmail.com - 0972389791
+Phan Thái Dương - 18120020
 
 ## Giáo Viên Hướng Dẫn
 
