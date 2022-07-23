@@ -3,4 +3,3 @@ data
 core/__pycache__/
 *.pyc
 Miniconda*
-expr
