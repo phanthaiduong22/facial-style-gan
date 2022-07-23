@@ -75,7 +75,7 @@ def translate_and_reconstruct(nets, args, x_src, y_src, x_ref, y_ref, filename):
 
 
 @torch.no_grad()
-def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename, print_bundle):
+def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename, print_bundle = 1):
     N, C, H, W = x_src.size()
     wb = torch.ones(1, C, H, W).to(x_src.device)
     x_src_with_wb = torch.cat([wb, x_src], dim=0)
@@ -83,7 +83,7 @@ def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename, print_b
     masks = nets.fan.get_heatmap(x_src) if args.w_hpf > 0 else None
     s_ref = nets.style_encoder(x_ref, y_ref)
     s_ref_list = s_ref.unsqueeze(1).repeat(1, N, 1)
-    if print_bundle == 1:
+    if print_bundle != None and print_bundle == 1:
         x_concat = [x_src_with_wb]
         for i, s_ref in enumerate(s_ref_list):
             x_fake = nets.generator(x_src, s_ref, masks=masks)

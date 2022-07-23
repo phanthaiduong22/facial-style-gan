@@ -2,3 +2,5 @@ data
 expr
 .DS_Store
 core/__pycache__/
+*.pyc
+Miniconda*
