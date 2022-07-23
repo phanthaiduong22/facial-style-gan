@@ -20,6 +20,8 @@ Th.S Phạm Minh Hoàng
 
 ## Hướng Dẫn Train Và Sử Dụng FacialStyleTransfer
 
-Tạo một bản copy từ [Google Colab](https://colab.research.google.com/drive/1Gr8LymTaAuD9_FFmhZBy-gHit2xPr9VG?usp=sharing) và làm theo hướng dẫn
+#### Để dễ dàng cài đặt nhóm sinh viên đã chuẩn bị file Google Colab, có thể tạo một bản copy và chạy theo hướng dẫn chi tiết trong Google Colab
+
+#### [Google Colab](https://colab.research.google.com/drive/1Gr8LymTaAuD9_FFmhZBy-gHit2xPr9VG?usp=sharing)
 
 ## [Tài Liệu Tham Khảo](https://drive.google.com/drive/folders/1FdVNNioN6XolL8YPPyBjrCi7vrS3ZTLt?usp=sharing)
