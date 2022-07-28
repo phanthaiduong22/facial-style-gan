@@ -206,7 +206,10 @@ class Solver(nn.Module):
 
         print("I found {} face(s) in this photograph.".format(len(face_locations)))
 
-        objectDetectionPath = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/object_detection.jpg"
+        new_src_path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/src/female/object_detection.jpg"
+        new_ref_path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/ref/female/object_detection.jpg"
+        ref_img = cv2.imread(img_ref)
+        cv2.imwrite(new_ref_path, ref_img)
 
         for face_location in face_locations:
 
@@ -218,11 +221,9 @@ class Solver(nn.Module):
             face_image = image[top-bounding-50:bottom+bounding-20, left-bounding:right+bounding]
             pil_image = Image.fromarray(face_image)
             pil_image.show()
-            pil_image.save(objectDetectionPath)
+            pil_image.save(new_src_path)
         
         ### StyleTransfer
-
-     
         src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
@@ -240,7 +241,6 @@ class Solver(nn.Module):
         segment = np.zeros(original_image.shape[:2],np.uint8)
     
         height, width, channels = original_image.shape
-        print(height, width)
         bounding_box = (0,0,height, width)
         segment[0:height, 0:width] = 1
 
