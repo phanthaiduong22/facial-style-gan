@@ -78,7 +78,6 @@ def translate_and_reconstruct(nets, args, x_src, y_src, x_ref, y_ref, filename):
 @torch.no_grad()
 def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename, print_bundle = 1):
     N, C, H, W = x_src.size()
-    print(x_src.shape)
     wb = torch.ones(1, C, H, W).to(x_src.device)
     x_src_with_wb = torch.cat([wb, x_src], dim=0)
 
@@ -112,6 +111,7 @@ def translate_using_reference(nets, args, x_src, x_ref, y_ref, filename, print_b
 
 @torch.no_grad()
 def translate_using_reference_object_detection(nets, args, x_src, x_ref, y_ref, filename):
+    print(x_src.shape)
     # x_src = x_src[-1]
     x_ref = x_ref[-1]
     y_ref = y_ref[-1]
