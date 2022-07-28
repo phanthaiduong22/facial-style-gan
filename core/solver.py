@@ -198,10 +198,9 @@ class Solver(nn.Module):
         args = self.args
         nets_ema = self.nets_ema
         os.makedirs(args.result_dir, exist_ok=True)
-        print(img_src, img_ref)
+        self._load_checkpoint(args.resume_iter)
 
         image = face_recognition.load_image_file(img_src)
-
         face_locations = face_recognition.face_locations(image)
 
         print("I found {} face(s) in this photograph.".format(len(face_locations)))
