@@ -23,7 +23,6 @@ from torch.utils import data
 from torch.utils.data.sampler import WeightedRandomSampler
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
-from torchvision.datasets import Image
 
 
 def listdir(dname):
