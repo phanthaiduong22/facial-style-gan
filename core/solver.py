@@ -212,13 +212,13 @@ class Solver(nn.Module):
             face_image = image[top:bottom, left:right]
             pil_image = Image.fromarray(face_image)
             pil_image.show()
-            pil_image.save("hello.jpg")
+            pil_image.save("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/hello.jpg")
         
 
         # load src image  using loaders
         dir_path = os.path.dirname(os.path.realpath(__file__))
         print(dir_path)
-        src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/hello.jpg",
+        src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
                                     shuffle=False,
