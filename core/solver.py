@@ -241,8 +241,7 @@ class Solver(nn.Module):
         background_mdl = np.zeros((1,65), np.float64)
         foreground_mdl = np.zeros((1,65), np.float64)
         
-        cv2.grabCut(original_image, segment, bounding_box, background_mdl, foreground_mdl, 5,
-        cv2.GC_INIT_WITH_RECT)
+        cv2.grabCut(original_image, segment, bounding_box, background_mdl, foreground_mdl, 5, cv2.GC_INIT_WITH_RECT)
 
         new_mask = np.where((segment==2)|(segment==0),0,1).astype('uint8')
 
