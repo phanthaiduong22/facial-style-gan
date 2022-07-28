@@ -223,12 +223,12 @@ class Solver(nn.Module):
             pil_image.save(new_src_path)
         
         ### StyleTransfer
-        loaders = Munch(src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/src",
+        loaders = Munch(src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/src/",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
                                     shuffle=False,
                                     num_workers=args.num_workers),
-                        ref=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/ref",
+                        ref=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/ref/",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
                                     shuffle=False,
