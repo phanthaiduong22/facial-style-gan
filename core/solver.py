@@ -253,7 +253,8 @@ class Solver(nn.Module):
         new_mask = np.where((segment==2)|(segment==0),0,1).astype('uint8')
 
         original_image = original_image*new_mask[:,:,np.newaxis]
-        cv2_imshow(original_image)
+        # cv2_imshow(original_image)
+        cv2.imwrite("res.jpg", original_image)
 
         # image = cv2.imread("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
