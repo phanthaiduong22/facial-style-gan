@@ -232,7 +232,7 @@ class Solver(nn.Module):
         ### Segmentation
         path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg"
         original_image = cv2.imread('/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg')
-        if img is None:
+        if original_image is None:
             print('Wrong path:', path)
         else:
             print("Right path")
