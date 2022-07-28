@@ -267,7 +267,6 @@ class Solver(nn.Module):
         cv2.imwrite(resSegmentationPath, original_image)
 
         ### Segmentation works
-
         # image = cv2.imread("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         # gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
