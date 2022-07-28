@@ -28,6 +28,8 @@ from metrics.eval import calculate_metrics
 from PIL import Image
 import face_recognition
 from core.data_loader import get_test_loader_object_detection
+import cv2
+import matplotlib.pyplot as plt
 
 
 class Solver(nn.Module):
@@ -216,13 +218,33 @@ class Solver(nn.Module):
         
 
         # load src image  using loaders
-        dir_path = os.path.dirname(os.path.realpath(__file__))
-        print(dir_path)
-        src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection",
-                                    img_size=args.img_size,
-                                    batch_size=args.val_batch_size,
-                                    shuffle=False,
-                                    num_workers=args.num_workers),
+        # dir_path = os.path.dirname(os.path.realpath(__file__))
+        # print(dir_path)
+        # print(args.img_)
+        # src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection",
+        #                             img_size=args.img_size,
+        #                             batch_size=args.val_batch_size,
+        #                             shuffle=False,
+        #                             num_workers=args.num_workers),
+
+        ### Segmentation
+
+        image = cv2.imread("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+
+        _, binary = cv2.threshold(gray, 225, 255, cv2.THRESH_BINARY_INV)
+        plt.imshow(binary, cmap="gray")
+        plt.show()
+
+        # find the contours from the thresholded image
+        contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        # draw all contours
+        image = cv2.drawContours(image, contours, -1, (0, 255, 0), 2)
+
+        plt.imshow(image)
+        plt.show()
+        plt.savefig("hello_res.jpg")
 
         # # object detection src image
 
