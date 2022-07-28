@@ -205,8 +205,8 @@ class Solver(nn.Module):
 
         print("I found {} face(s) in this photograph.".format(len(face_locations)))
 
-        new_src_path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/src/female/object_detection.jpg"
-        new_ref_path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/ref/female/object_detection.jpg"
+        new_src_path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/src/male/object_detection.jpg"
+        new_ref_path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/ref/male/object_detection.jpg"
         ref_img = cv2.imread(img_ref)
         cv2.imwrite(new_ref_path, ref_img)
 
