@@ -206,6 +206,8 @@ class Solver(nn.Module):
 
         print("I found {} face(s) in this photograph.".format(len(face_locations)))
 
+        objectDetectionPath = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/object_detection.jpg"
+
         for face_location in face_locations:
 
             # Print the location of each face in this image
@@ -216,22 +218,19 @@ class Solver(nn.Module):
             face_image = image[top-bounding-50:bottom+bounding-20, left-bounding:right+bounding]
             pil_image = Image.fromarray(face_image)
             pil_image.show()
-            pil_image.save("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
+            pil_image.save(objectDetectionPath)
         
+        ### StyleTransfer
 
-        # load src image  using loaders
-        # dir_path = os.path.dirname(os.path.realpath(__file__))
-        # print(dir_path)
-        # print(args.img_)
-        # src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection",
-        #                             img_size=args.img_size,
-        #                             batch_size=args.val_batch_size,
-        #                             shuffle=False,
-        #                             num_workers=args.num_workers),
+     
+        src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection",
+                                    img_size=args.img_size,
+                                    batch_size=args.val_batch_size,
+                                    shuffle=False,
+                                    num_workers=args.num_workers),
 
         ### Segmentation
-        path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg"
-        original_image = cv2.imread('/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg')
+        original_image = cv2.imread(objectDetectionPath)
         if original_image is None:
             print('Wrong path:', path)
         else:
@@ -242,8 +241,8 @@ class Solver(nn.Module):
     
         height, width, channels = original_image.shape
         print(height, width)
-        bounding_box = (1,1,height, width)
-        segment[1:height, 1:width] = 1
+        bounding_box = (0,0,height, width)
+        segment[0:height, 0:width] = 1
 
         background_mdl = np.zeros((1,65), np.float64)
         foreground_mdl = np.zeros((1,65), np.float64)
@@ -255,6 +254,8 @@ class Solver(nn.Module):
         original_image = original_image*new_mask[:,:,np.newaxis]
         # cv2_imshow(original_image)
         cv2.imwrite("res.jpg", original_image)
+
+        ### Segmentation works
 
         # image = cv2.imread("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
