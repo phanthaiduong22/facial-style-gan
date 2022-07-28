@@ -204,7 +204,7 @@ def get_test_loader_object_detection(root, img_size=256, batch_size=32,
         transforms.Normalize(mean=[0.5, 0.5, 0.5],
                              std=[0.5, 0.5, 0.5]),
     ])
-    fmt.Println(root)
+    print(root)
     dataset = ImageFolder(root, transform)
     print(dataset)
     return data.DataLoader(dataset=dataset,
