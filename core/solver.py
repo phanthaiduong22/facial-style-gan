@@ -230,16 +230,22 @@ class Solver(nn.Module):
 
         ### Segmentation
 
-        img = cv2.imread('/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg')
-        mask = np.zeros(img.shape[:2],np.uint8)
-        bgdModel = np.zeros((1,65),np.float64)
-        fgdModel = np.zeros((1,65),np.float64)
-        rect = (50,50,450,290)
-        cv2.grabCut(img,mask,rect,bgdModel,fgdModel,5,cv2.GC_INIT_WITH_RECT)
-        mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
-        img = img*mask2[:,:,np.newaxis]
-        plt.imshow(img),plt.colorbar(),plt.show()
-        plt.savefig("res.jpg")
+        original_image = cv2.imread('/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg')
+        segment = np.zeros(original_image.shape[:2],np.uint8)
+    
+        height, width, channels = original_image.shape
+        segment[0:height, 0:width] = 1
+        bounding_box =(0, 0, width, height)
+
+        background_mdl = np.zeros((1,65), np.float64)
+        foreground_mdl = np.zeros((1,65), np.float64)
+        
+        cv2.grabCut(original_image, segment, bounding_box, background_mdl, foreground_mdl, 5,
+        cv2.GC_INIT_WITH_RECT)
+
+        new_mask = np.where((segment==2)|(segment==0),0,1).astype('uint8')
+
+        original_image = original_image*new_mask[:,:,np.newaxis]
 
         # image = cv2.imread("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
