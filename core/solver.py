@@ -212,7 +212,7 @@ class Solver(nn.Module):
             face_image = image[top:bottom, left:right]
             pil_image = Image.fromarray(face_image)
             pil_image.show()
-            pil_image.save("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/hello.jpg")
+            pil_image.save("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
         
 
         # load src image  using loaders
