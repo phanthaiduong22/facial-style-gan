@@ -216,7 +216,7 @@ class Solver(nn.Module):
         
 
         # load src image  using loaders
-        src=get_test_loader_object_detection(root="./hello.jpb",
+        src=get_test_loader_object_detection(root="./hello.jpg",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
                                     shuffle=False,
