@@ -213,7 +213,7 @@ class Solver(nn.Module):
             print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
             bounding = 150
             # You can access the actual face itself like this:
-            face_image = image[top-bounding-100:bottom+bounding-20, left-bounding:right+bounding]
+            face_image = image[top-bounding-80:bottom+bounding-20, left-bounding:right+bounding]
             pil_image = Image.fromarray(face_image)
             pil_image.show()
             pil_image.save("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
