@@ -207,6 +207,7 @@ class Solver(nn.Module):
 
         new_src_path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/src/male/object_detection.jpg"
         new_ref_path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/ref/male/object_detection.jpg"
+        new
         ref_img = cv2.imread(img_ref)
         cv2.imwrite(new_ref_path, ref_img)
 
@@ -241,29 +242,30 @@ class Solver(nn.Module):
 
         
         ### Segmentation
-        # original_image = cv2.imread(objectDetectionPath)
-        # if original_image is None:
-        #     print('Wrong path:', path)
-        # else:
-        #     print("Right path")
-        #     # img = cv2.resize(img, dsize=(128,128))
-        #     # pixels.append(img)
-        # segment = np.zeros(original_image.shape[:2],np.uint8)
+        resStyleTransferPath = "/content/drive/MyDrive/thesis/facial-style-gan/expr/results/" + fname
+        resSegmentationPath = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/res/" + fname
+        original_image = cv2.imread(resStyleTransferPath)
+        if original_image is None:
+            print('Wrong path:', path)
+        else:
+            print("Right path")
+            # img = cv2.resize(img, dsize=(128,128))
+            # pixels.append(img)
+        segment = np.zeros(original_image.shape[:2],np.uint8)
     
-        # height, width, channels = original_image.shape
-        # bounding_box = (0,0,height, width)
-        # segment[0:height, 0:width] = 1
+        height, width, channels = original_image.shape
+        bounding_box = (0,0,height, width)
+        segment[0:height, 0:width] = 1
 
-        # background_mdl = np.zeros((1,65), np.float64)
-        # foreground_mdl = np.zeros((1,65), np.float64)
+        background_mdl = np.zeros((1,65), np.float64)
+        foreground_mdl = np.zeros((1,65), np.float64)
         
-        # cv2.grabCut(original_image, segment, bounding_box, background_mdl, foreground_mdl, 5, cv2.GC_INIT_WITH_RECT)
+        cv2.grabCut(original_image, segment, bounding_box, background_mdl, foreground_mdl, 5, cv2.GC_INIT_WITH_RECT)
 
-        # new_mask = np.where((segment==2)|(segment==0),0,1).astype('uint8')
+        new_mask = np.where((segment==2)|(segment==0),0,1).astype('uint8')
 
-        # original_image = original_image*new_mask[:,:,np.newaxis]
-        # # cv2_imshow(original_image)
-        # cv2.imwrite("res.jpg", original_image)
+        original_image = original_image*new_mask[:,:,np.newaxis]
+        cv2.imwrite(resSegmentationPath, original_image)
 
         ### Segmentation works
 
