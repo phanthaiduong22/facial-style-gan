@@ -118,8 +118,9 @@ def translate_using_reference_object_detection(nets, args, x_src, x_ref, y_ref, 
     masks = nets.fan.get_heatmap(x_src) if args.w_hpf > 0 else None
     s_ref = nets.style_encoder(x_ref, y_ref)
     s_ref_list = s_ref.unsqueeze(1).repeat(1, N, 1)
-    x_concat = [x_src_with_wb]
+    # x_concat = [x_src_with_wb]
     for i, s_ref in enumerate(s_ref_list):
+        print()
         x_fake = nets.generator(x_src, s_ref, masks=masks)
         x_fake_with_ref = torch.cat([x_ref[i:i+1], x_fake], dim=0)
         x_concat += [x_fake_with_ref]
