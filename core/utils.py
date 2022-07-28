@@ -122,10 +122,10 @@ def translate_using_reference_object_detection(nets, args, x_src, x_ref, y_ref, 
     for i, s_ref in enumerate(s_ref_list):
         x_fake = nets.generator(x_src, s_ref, masks=masks)
         cv2.imwrite("kaka", x_fake)
-        # x_fake_with_ref = torch.cat([x_ref[i:i+1], x_fake], dim=0)
-        # x_concat += [x_fake_with_ref]
+        x_fake_with_ref = torch.cat([x_ref[i:i+1], x_fake], dim=0)
+        x_concat += [x_fake_with_ref]
 
-    # x_concat = torch.cat(x_concat, dim=0)
+    x_concat = torch.cat(x_concat, dim=0)
     # save_image(x_concat, N+1, filename)
     # del x_concat
 
