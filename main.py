@@ -74,7 +74,7 @@ def main(args):
                                             batch_size=args.val_batch_size,
                                             shuffle=False,
                                             num_workers=args.num_workers))
-        solver.sample(loaders)
+        solver.sample_object_detection(loaders)
     elif args.mode == 'eval':
         solver = Solver(args)
         solver.evaluate()
