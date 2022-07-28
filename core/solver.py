@@ -29,7 +29,8 @@ from PIL import Image
 import face_recognition
 from core.data_loader import get_test_loader_object_detection
 import cv2
-import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib import pyplot as plt
 
 
 class Solver(nn.Module):
@@ -229,23 +230,34 @@ class Solver(nn.Module):
 
         ### Segmentation
 
-        image = cv2.imread("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+        img = cv2.imread('/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg')
+        mask = np.zeros(img.shape[:2],np.uint8)
+        bgdModel = np.zeros((1,65),np.float64)
+        fgdModel = np.zeros((1,65),np.float64)
+        rect = (50,50,450,290)
+        cv2.grabCut(img,mask,rect,bgdModel,fgdModel,5,cv.GC_INIT_WITH_RECT)
+        mask2 = np.where((mask==2)|(mask==0),0,1).astype('uint8')
+        img = img*mask2[:,:,np.newaxis]
+        plt.imshow(img),plt.colorbar(),plt.show()
+        plt.savefig("res.jpg")
 
-        _, binary = cv2.threshold(gray, 255, 255, cv2.THRESH_BINARY_INV)
-        plt.imshow(binary, cmap="gray")
-        plt.show()
-        plt.savefig("grey.jpg")
+        # image = cv2.imread("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
+        # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        # gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
-        # find the contours from the thresholded image
-        contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
-        # draw all contours
-        image = cv2.drawContours(image, contours, -1, (0, 255, 0), 2)
+        # _, binary = cv2.threshold(gray, 255, 255, cv2.THRESH_BINARY_INV)
+        # plt.imshow(binary, cmap="gray")
+        # plt.show()
+        # plt.savefig("grey.jpg")
 
-        plt.imshow(image)
-        plt.show()
-        plt.savefig("hello_res.jpg")
+        # # find the contours from the thresholded image
+        # contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        # # draw all contours
+        # image = cv2.drawContours(image, contours, -1, (0, 255, 0), 2)
+
+        # plt.imshow(image)
+        # plt.show()
+        # plt.savefig("hello_res.jpg")
 
         # # object detection src image
 
