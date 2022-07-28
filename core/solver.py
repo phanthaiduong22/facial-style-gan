@@ -191,6 +191,9 @@ class Solver(nn.Module):
         utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname, args.print_bundle)
     
     def sample_object_detection(self, img_src, img_ref):
+        args = self.args
+        nets_ema = self.nets_ema
+        os.makedirs(args.result_dir, exist_ok=True)
         print(img_src, img_ref)
 
         image = face_recognition.load_image_file(img_src)
@@ -213,7 +216,7 @@ class Solver(nn.Module):
         
 
         # load src image  using loaders
-        src=get_test_loader(root=args.src_dir,
+        src=get_test_loader_object_detection(root="./hello.jpb",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
                                     shuffle=False,

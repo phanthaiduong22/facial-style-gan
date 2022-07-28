@@ -191,7 +191,6 @@ def get_test_loader(root, img_size=256, batch_size=32,
     ])
 
     dataset = ImageFolder(root, transform)
-    print(dataset)
     return data.DataLoader(dataset=dataset,
                            batch_size=batch_size,
                            shuffle=shuffle,
@@ -200,15 +199,14 @@ def get_test_loader(root, img_size=256, batch_size=32,
 
 def get_test_loader_object_detection(root, img_size=256, batch_size=32,
                     shuffle=True, num_workers=4):
-    # print('Preparing DataLoader for the generation phase...')
-    # transform = transforms.Compose([
-    #     transforms.Resize([img_size, img_size]),
-    #     transforms.ToTensor(),
-    #     transforms.Normalize(mean=[0.5, 0.5, 0.5],
-    #                          std=[0.5, 0.5, 0.5]),
-    # ])
-
+    transform = transforms.Compose([
+        transforms.Resize([img_size, img_size]),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=[0.5, 0.5, 0.5],
+                             std=[0.5, 0.5, 0.5]),
+    ])
     dataset = ImageFolder(root, transform)
+    print(dataset)
     return data.DataLoader(dataset=dataset,
                            batch_size=batch_size,
                            shuffle=shuffle,
