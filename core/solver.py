@@ -236,6 +236,7 @@ class Solver(nn.Module):
         _, binary = cv2.threshold(gray, 225, 255, cv2.THRESH_BINARY_INV)
         plt.imshow(binary, cmap="gray")
         plt.show()
+        plt.savefig("grey.jpg")
 
         # find the contours from the thresholded image
         contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
