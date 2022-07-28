@@ -237,7 +237,7 @@ class Solver(nn.Module):
         ref = next(InputFetcher(loaders.ref, None, args.latent_dim, 'test'))
         fname = ospj(args.result_dir, args.filename)
         print('Working on {}...'.format(fname))
-        utils.translate_using_reference_object_detection(nets_ema, args, src.x, ref.x, ref.y, fname, args.print_bundle)
+        utils.translate_using_reference_object_detection(nets_ema, args, src.x, ref.x, ref.y, fname)
 
         
         ### Segmentation
