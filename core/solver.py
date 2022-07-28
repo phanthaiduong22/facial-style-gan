@@ -206,6 +206,7 @@ class Solver(nn.Module):
             face_image = image[top:bottom, left:right]
             pil_image = Image.fromarray(face_image)
             pil_image.show()
+            pil_image.save("hello.jpg")
         # args = self.args
         # nets_ema = self.nets_ema
         # os.makedirs(args.result_dir, exist_ok=True)
