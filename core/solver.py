@@ -190,7 +190,9 @@ class Solver(nn.Module):
     def sample_object_detection(self, img_src, img_ref):
         print(img_src, img_ref)
 
-        face_locations = face_recognition.face_locations(img_src)
+        image = face_recognition.load_image_file(img_src)
+
+        face_locations = face_recognition.face_locations(image)
 
         print("I found {} face(s) in this photograph.".format(len(face_locations)))
 
