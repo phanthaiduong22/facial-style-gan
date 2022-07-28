@@ -224,12 +224,22 @@ class Solver(nn.Module):
             pil_image.save(new_src_path)
         
         ### StyleTransfer
-        src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/",
+        loaders = Munch(src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/src/",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
                                     shuffle=False,
                                     num_workers=args.num_workers),
+                        ref=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/ref/",
+                                    img_size=args.img_size,
+                                    batch_size=args.val_batch_size,
+                                    shuffle=False,
+                                    num_workers=args.num_workers))
+        src = next(InputFetcher(loaders.src, None, args.latent_dim, 'test'))
+        ref = next(InputFetcher(loaders.ref, None, args.latent_dim, 'test'))
+        fname = ospj(args.result_dir, args.filename)
+        print('Working on {}...'.format(fname))
 
+        
         ### Segmentation
         # original_image = cv2.imread(objectDetectionPath)
         # if original_image is None:
