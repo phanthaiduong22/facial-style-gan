@@ -235,8 +235,9 @@ class Solver(nn.Module):
         segment = np.zeros(original_image.shape[:2],np.uint8)
     
         height, width, channels = original_image.shape
+        print(height, width)
+        bounding_box = (0,0,height, width)
         segment[0:height, 0:width] = 1
-        bounding_box =(0, 0, width, height)
 
         background_mdl = np.zeros((1,65), np.float64)
         foreground_mdl = np.zeros((1,65), np.float64)
