@@ -191,6 +191,8 @@ class Solver(nn.Module):
 
         image = face_recognition.load_image_file(img_src)
         face_locations = face_recognition.face_locations(image)
+
+        print(face_locations)
         # args = self.args
         # nets_ema = self.nets_ema
         # os.makedirs(args.result_dir, exist_ok=True)
