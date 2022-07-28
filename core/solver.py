@@ -24,6 +24,7 @@ from core.checkpoint import CheckpointIO
 from core.data_loader import InputFetcher
 import core.utils as utils
 from metrics.eval import calculate_metrics
+from PIL import Image
 
 
 class Solver(nn.Module):
@@ -189,10 +190,20 @@ class Solver(nn.Module):
     def sample_object_detection(self, img_src, img_ref):
         print(img_src, img_ref)
 
-        image = face_recognition.load_image_file(img_src)
-        face_locations = face_recognition.face_locations(image)
+        face_locations = face_recognition.face_locations(img_src)
 
-        print(face_locations)
+        print("I found {} face(s) in this photograph.".format(len(face_locations)))
+
+        for face_location in face_locations:
+
+            # Print the location of each face in this image
+            top, right, bottom, left = face_location
+            print("A face is located at pixel location Top: {}, Left: {}, Bottom: {}, Right: {}".format(top, left, bottom, right))
+
+            # You can access the actual face itself like this:
+            face_image = image[top:bottom, left:right]
+            pil_image = Image.fromarray(face_image)
+            pil_image.show()
         # args = self.args
         # nets_ema = self.nets_ema
         # os.makedirs(args.result_dir, exist_ok=True)
