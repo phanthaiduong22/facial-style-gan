@@ -241,8 +241,8 @@ class Solver(nn.Module):
 
         
         ### Segmentation
-        resStyleTransferPath = "/content/drive/MyDrive/thesis/facial-style-gan/expr/results/" + fname
-        resSegmentationPath = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/res/" + fname
+        resStyleTransferPath = "/content/drive/MyDrive/thesis/facial-style-gan/expr/results/" + args.filename
+        resSegmentationPath = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/res/" + args.filename
         original_image = cv2.imread(resStyleTransferPath)
         if original_image is None:
             print('Wrong path:', resStyleTransferPath)
