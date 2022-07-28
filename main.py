@@ -62,7 +62,7 @@ def main(args):
                                             num_workers=args.num_workers))
         solver = Solver(args)
         solver.train(loaders)
-    elif args.mode == 'sample':
+    elif args.mode == 'sample-object-detection':
         solver = Solver(args)
         # loaders = Munch(src=get_test_loader(root=args.src_dir,
         #                                     img_size=args.img_size,
@@ -157,7 +157,7 @@ if __name__ == '__main__':
 
     # misc
     parser.add_argument('--mode', type=str, required=True,
-                        choices=['train', 'sample', 'eval', 'align', 'profile'],
+                        choices=['train', 'sample', 'eval', 'align', 'profile', 'sample-object-detection'],
                         help='This argument is used in solver')
     parser.add_argument('--num_workers', type=int, default=4,
                         help='Number of workers used in DataLoader')
