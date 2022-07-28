@@ -216,7 +216,9 @@ class Solver(nn.Module):
         
 
         # load src image  using loaders
-        src=get_test_loader_object_detection(root="./hello.jpg",
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        print(dir_path)
+        src=get_test_loader_object_detection(root="./hello.jpeg",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
                                     shuffle=False,
