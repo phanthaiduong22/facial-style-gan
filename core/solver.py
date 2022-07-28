@@ -190,7 +190,15 @@ class Solver(nn.Module):
         os.makedirs(args.result_dir, exist_ok=True)
         self._load_checkpoint(args.resume_iter)
 
+        print(loaders.src)
+        # load src image 
+
+        # object detection src image
+
+        # pass src InputFetcher like below
         src = next(InputFetcher(loaders.src, None, args.latent_dim, 'test'))
+
+
         ref = next(InputFetcher(loaders.ref, None, args.latent_dim, 'test'))
 
         fname = ospj(args.result_dir, args.filename)
