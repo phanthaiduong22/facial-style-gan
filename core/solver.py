@@ -12,7 +12,6 @@ from os.path import join as ospj
 import time
 import datetime
 from munch import Munch
-import face_recognition
 
 
 import torch
@@ -24,7 +23,11 @@ from core.checkpoint import CheckpointIO
 from core.data_loader import InputFetcher
 import core.utils as utils
 from metrics.eval import calculate_metrics
+
+# duong
 from PIL import Image
+import face_recognition
+from core.data_loader import get_test_loader_object_detection
 
 
 class Solver(nn.Module):
@@ -207,13 +210,14 @@ class Solver(nn.Module):
             pil_image = Image.fromarray(face_image)
             pil_image.show()
             pil_image.save("hello.jpg")
-        # args = self.args
-        # nets_ema = self.nets_ema
-        # os.makedirs(args.result_dir, exist_ok=True)
-        # self._load_checkpoint(args.resume_iter)
+        
 
-        # print(loaders.src)
-        # # load src image 
+        # load src image  using loaders
+        src=get_test_loader(root=args.src_dir,
+                                    img_size=args.img_size,
+                                    batch_size=args.val_batch_size,
+                                    shuffle=False,
+                                    num_workers=args.num_workers),
 
         # # object detection src image
 

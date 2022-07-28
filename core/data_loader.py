@@ -23,6 +23,7 @@ from torch.utils import data
 from torch.utils.data.sampler import WeightedRandomSampler
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
+from torchvision.datasets import Image
 
 
 def listdir(dname):
@@ -190,6 +191,7 @@ def get_test_loader(root, img_size=256, batch_size=32,
     ])
 
     dataset = ImageFolder(root, transform)
+    print(dataset)
     return data.DataLoader(dataset=dataset,
                            batch_size=batch_size,
                            shuffle=shuffle,
