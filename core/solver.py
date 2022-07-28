@@ -12,6 +12,8 @@ from os.path import join as ospj
 import time
 import datetime
 from munch import Munch
+import face_recognition
+
 
 import torch
 import torch.nn as nn
@@ -187,6 +189,8 @@ class Solver(nn.Module):
     def sample_object_detection(self, img_src, img_ref):
         print(img_src, img_ref)
 
+        image = face_recognition.load_image_file(img_src)
+        face_locations = face_recognition.face_locations(image)
         # args = self.args
         # nets_ema = self.nets_ema
         # os.makedirs(args.result_dir, exist_ok=True)
