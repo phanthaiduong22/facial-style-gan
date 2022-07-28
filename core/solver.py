@@ -223,7 +223,7 @@ class Solver(nn.Module):
         ### StyleTransfer
 
      
-        src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection",
+        src=get_test_loader_object_detection(root="/content/drive/MyDrive/thesis/facial-style-gan/object-detection/",
                                     img_size=args.img_size,
                                     batch_size=args.val_batch_size,
                                     shuffle=False,
