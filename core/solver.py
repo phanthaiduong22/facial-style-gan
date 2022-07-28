@@ -233,7 +233,7 @@ class Solver(nn.Module):
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
         gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
 
-        _, binary = cv2.threshold(gray, 100, 100, cv2.THRESH_BINARY_INV)
+        _, binary = cv2.threshold(gray, 10, 255, cv2.THRESH_BINARY_INV)
         plt.imshow(binary, cmap="gray")
         plt.show()
         plt.savefig("grey.jpg")
