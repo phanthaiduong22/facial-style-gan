@@ -23,6 +23,7 @@ from core.checkpoint import CheckpointIO
 from core.data_loader import InputFetcher
 import core.utils as utils
 from metrics.eval import calculate_metrics
+from google.colab.patches import cv2_imshow
 
 # duong
 from PIL import Image
@@ -246,6 +247,7 @@ class Solver(nn.Module):
         new_mask = np.where((segment==2)|(segment==0),0,1).astype('uint8')
 
         original_image = original_image*new_mask[:,:,np.newaxis]
+        cv2_imshow(original_image)
 
         # image = cv2.imread("/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg")
         # image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
