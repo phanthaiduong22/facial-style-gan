@@ -12,6 +12,7 @@ from os.path import join as ospj
 import time
 import datetime
 from munch import Munch
+import time
 
 import torch
 import torch.nn as nn
@@ -172,6 +173,8 @@ class Solver(nn.Module):
 
     @torch.no_grad()
     def sample(self, loaders):
+        print("start sampling")
+        start_time = time.time()
         args = self.args
         nets_ema = self.nets_ema
         os.makedirs(args.result_dir, exist_ok=True)
@@ -183,6 +186,7 @@ class Solver(nn.Module):
         fname = ospj(args.result_dir, args.filename)
         print('Working on {}...'.format(fname))
         utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname, args.print_bundle)
+        print("exit sampling--- %s seconds ---" % (time.time() - start_time))
         
     @torch.no_grad()
     def evaluate(self):
