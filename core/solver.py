@@ -230,8 +230,14 @@ class Solver(nn.Module):
         #                             num_workers=args.num_workers),
 
         ### Segmentation
-
+        path = "/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg"
         original_image = cv2.imread('/content/drive/MyDrive/thesis/facial-style-gan/object-detection/female/hello.jpg')
+        if img is None:
+            print('Wrong path:', path)
+        else:
+            print("Right path")
+            # img = cv2.resize(img, dsize=(128,128))
+            # pixels.append(img)
         segment = np.zeros(original_image.shape[:2],np.uint8)
     
         height, width, channels = original_image.shape
