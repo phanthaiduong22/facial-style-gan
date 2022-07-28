@@ -196,6 +196,8 @@ def get_test_loader(root, img_size=256, batch_size=32,
                            num_workers=num_workers,
                            pin_memory=True)
 
+def get_test_loader(root, )
+
 
 class InputFetcher:
     def __init__(self, loader, loader_ref=None, latent_dim=16, mode=''):

@@ -184,26 +184,28 @@ class Solver(nn.Module):
         print('Working on {}...'.format(fname))
         utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname, args.print_bundle)
     
-    def sample_object_detection(self, loaders):
-        args = self.args
-        nets_ema = self.nets_ema
-        os.makedirs(args.result_dir, exist_ok=True)
-        self._load_checkpoint(args.resume_iter)
+    def sample_object_detection(self, img_src, img_ref):
+        print(img_src, img_ref)
 
-        print(loaders.src)
-        # load src image 
+        # args = self.args
+        # nets_ema = self.nets_ema
+        # os.makedirs(args.result_dir, exist_ok=True)
+        # self._load_checkpoint(args.resume_iter)
 
-        # object detection src image
+        # print(loaders.src)
+        # # load src image 
 
-        # pass src InputFetcher like below
-        src = next(InputFetcher(loaders.src, None, args.latent_dim, 'test'))
+        # # object detection src image
+
+        # # pass src InputFetcher like below
+        # src = next(InputFetcher(loaders.src, None, args.latent_dim, 'test'))
 
 
-        ref = next(InputFetcher(loaders.ref, None, args.latent_dim, 'test'))
+        # ref = next(InputFetcher(loaders.ref, None, args.latent_dim, 'test'))
 
-        fname = ospj(args.result_dir, args.filename)
-        print('Working on {}...'.format(fname))
-        utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname, args.print_bundle)
+        # fname = ospj(args.result_dir, args.filename)
+        # print('Working on {}...'.format(fname))
+        # utils.translate_using_reference(nets_ema, args, src.x, ref.x, ref.y, fname, args.print_bundle)
         
     @torch.no_grad()
     def evaluate(self):

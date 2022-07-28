@@ -64,6 +64,19 @@ def main(args):
         solver.train(loaders)
     elif args.mode == 'sample':
         solver = Solver(args)
+        # loaders = Munch(src=get_test_loader(root=args.src_dir,
+        #                                     img_size=args.img_size,
+        #                                     batch_size=args.val_batch_size,
+        #                                     shuffle=False,
+        #                                     num_workers=args.num_workers),
+        #                 ref=get_test_loader(root=args.ref_dir,
+        #                                     img_size=args.img_size,
+        #                                     batch_size=args.val_batch_size,
+        #                                     shuffle=False,
+        #                                     num_workers=args.num_workers))
+        solver.sample_object_detection(args.src_dir, args.ref_dir)
+    elif args.mode == 'sample':
+        solver = Solver(args)
         loaders = Munch(src=get_test_loader(root=args.src_dir,
                                             img_size=args.img_size,
                                             batch_size=args.val_batch_size,
@@ -74,7 +87,7 @@ def main(args):
                                             batch_size=args.val_batch_size,
                                             shuffle=False,
                                             num_workers=args.num_workers))
-        solver.sample_object_detection(loaders)
+        solver.sample(loaders)
     elif args.mode == 'eval':
         solver = Solver(args)
         solver.evaluate()
