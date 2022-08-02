@@ -292,11 +292,8 @@ class Discriminator(nn.Module):
     def forward(self, x, y):
         out = self.main(x)
         out = out.view(out.size(0), -1)  # (batch, num_domains)
-        print("out = out.view(out.size(0), -1)", out)
         idx = torch.LongTensor(range(y.size(0))).to(y.device)
-        print("idx = torch.LongTensor(range(y.size(0))).to(y.device)idx = ", idx)
         out = out[idx, y]  # (batch)
-        print("out = out[idx, y] = ", out)
         return out
 
 
